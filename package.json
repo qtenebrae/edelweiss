@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "slint": "npx stylelint \"**/*.css\" --fix"
   },
   "dependencies": {
     "next": "14.0.3",
@@ -24,6 +25,10 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.0.1",
     "prettier": "^3.1.0",
-    "typescript": "^5"
+    "typescript": "^5",
+    "stylelint": "^15.10.3",
+		"stylelint-config-standard": "^34.0.0",
+		"stylelint-order": "^3.0.0",
+		"stylelint-order-config-standard": "^0.1.3"
   }
 }

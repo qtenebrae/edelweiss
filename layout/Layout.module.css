@@ -1,0 +1,7 @@
+.wrapper {
+    display: grid;
+}
+
+.body {
+    grid-area: body;
+}

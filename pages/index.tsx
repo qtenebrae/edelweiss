@@ -1,7 +1,17 @@
-export default function Home() {
+import { withLayout } from '@/layout/Layout';
+import { TrendingMovies } from '@/page-components';
+import { Card, CardBody } from '@nextui-org/react';
+
+function Home() {
 	return (
 		<>
-			<h1>123</h1>
+			<Card className="mx-auto mt-[40px] w-[1200px] h-[5120px] bg-background/20 backdrop-blur-[3px]">
+				<CardBody>
+					<TrendingMovies></TrendingMovies>
+				</CardBody>
+			</Card>
 		</>
 	);
 }
+
+export default withLayout(Home);

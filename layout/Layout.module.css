@@ -1,7 +1,26 @@
 .wrapper {
     display: grid;
+    grid-template-rows: 70px 1fr 60px;
+    grid-template-areas: "header" "body" "footer";
+
+    min-height: 100vh;
 }
 
 .body {
     grid-area: body;
+}
+
+.header {
+    grid-area: header;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+.body::before {
+    position: absolute;
+    left: 7px;
+    
+    content: url("../layout/DottedBackground.png");
 }

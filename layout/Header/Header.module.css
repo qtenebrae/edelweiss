@@ -1,0 +1,12 @@
+.header {
+    display: grid;
+    grid-template-columns: 144px auto 1fr auto auto;
+
+    align-items: center;
+    gap: 0 60px;
+
+    padding: 0 60px;
+
+    transition: all;
+    transition-duration: 150ms;
+}

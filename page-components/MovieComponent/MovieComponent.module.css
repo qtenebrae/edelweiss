@@ -1,0 +1,30 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [ratingstart] 240px [ratingend] 1fr [scorestart] 240px [end];
+    
+}
+
+.title {
+    grid-column: start / end;
+}
+
+.breadcrumbs {
+    grid-column: start / end;
+    margin-bottom: 20px;
+}
+
+.poster {
+    grid-column: start / posterend;
+}
+
+.informationblock {
+    grid-column: informationstart / informationend;
+}
+
+.ratingblock {
+    grid-column: ratingstart / ratingend;
+}
+
+.scoreblock {
+    grid-column: scorestart / end;
+}

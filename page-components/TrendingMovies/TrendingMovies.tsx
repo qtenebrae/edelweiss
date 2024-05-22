@@ -16,15 +16,15 @@ import { movies, film } from './data';
 export const TrendingMovies = ({ ...props }: TrendingMoviesProps): JSX.Element => {
 	return (
 		<div {...props}>
-			<Chip className="px-[24px] mb-[10px] text-[20px] text-white bg-gradient-to-tr from-pink-500 to-yellow-500 shadow-lg">
+			<Chip className="flex max-w-full px-[24px] mb-[10px] text-[20px] text-white bg-gradient-to-tr from-pink-500 to-yellow-500 shadow-lg">
 				Сейчас на экранах
 			</Chip>
 			<div className={styles.preview}>
 				{movies.map((item) => (
 					<Popover placement="right" key={item.id}>
 						<PopoverTrigger>
-							<Card className="w-[160px] h-[320px] bg-transparent hover:bg-secondary-200/80 hover:shadow-lg">
-								<CardBody className="overflow-visible p-[4px]">
+							<Card className="w-[160px] h-[325px] bg-background/40 hover:bg-secondary-200/60 hover:shadow-lg">
+								<CardBody className="overflow-visible p-[5px]">
 									<Image isZoomed className="object-cover z-0 w-full h-[260px]" src={item.src} />
 								</CardBody>
 								<CardFooter className="block pb-[10px] pt-0">

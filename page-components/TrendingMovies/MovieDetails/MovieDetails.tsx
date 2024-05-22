@@ -1,6 +1,6 @@
 import { MovieDetailsProps } from './MovieDetails.props';
-import style from './MovieDetails.module.css';
 import { Chip, Link, Select, SelectItem } from '@nextui-org/react';
+import style from './MovieDetails.module.css';
 
 export const MovieDetails = ({
 	title,

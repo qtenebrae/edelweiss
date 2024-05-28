@@ -36,7 +36,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 				`fixed z-50 w-[100vw] h-[70px] bg-background/40 backdrop-blur-[32px] hover:bg-background hover:shadow-lg`,
 			)}
 		>
-			<Link href="/movies/1">
+			<Link href="/movies/3">
 				<EdelweissIcon />
 			</Link>
 
@@ -52,8 +52,8 @@ export const Header = ({ ...props }: HeaderProps) => {
 				</DropdownTrigger>
 				<DropdownMenu variant="faded" aria-label="dropdown menu">
 					<DropdownSection title="Навигация" showDivider>
-						<DropdownItem key="movies" description="Энциклопедия фильмов">
-							Фильмы
+						<DropdownItem key="movies" description="Энциклопедия кинопроизведений">
+							Кинопроизведения
 						</DropdownItem>
 						<DropdownItem key="books" description="Энциклопедия книг">
 							Книги
@@ -91,10 +91,9 @@ export const Header = ({ ...props }: HeaderProps) => {
 					<AutocompleteItem
 						key={item.id}
 						textValue={`${item.title}, ${item.year}, ${item.director}`}
+						href="/"
 					>
-						<Link color="foreground" href="/test">
-							{`${item.title}, ${item.year}, ${item.director}`}
-						</Link>
+						{`${item.title}, ${item.year}, ${item.director}`}
 					</AutocompleteItem>
 				))}
 			</Autocomplete>
@@ -152,8 +151,8 @@ export const Header = ({ ...props }: HeaderProps) => {
 					</DropdownTrigger>
 					<DropdownMenu variant="faded" aria-label="dropdown menu">
 						<DropdownSection title="Аккаунт" showDivider>
-							<DropdownItem key="movie" href="/test" description="Избранные фильмы">
-								Список фильмов
+							<DropdownItem key="movie" description="Избранные кинопроизведения">
+								Список кинопроизведений
 							</DropdownItem>
 							<DropdownItem key="book" description="Избранные книги">
 								Список книг

@@ -43,11 +43,20 @@ export const movies = [
 	},
 ];
 
-export const film = {
+export const movie = {
 	title: 'Унесённые призраками',
 	plot: 'Тихиро с мамой и папой переезжает в новый дом. Заблудившись по дороге, они оказываются встранном пустынном городе, где их ждет великолепный...',
 	genres: ['Аниме', 'Мультфильм', 'Приключения'],
 	director: 'Хаяо Миядзаки',
-	agelimit: '12+',
+	agelimit: '12',
 	rating: 8.52,
 };
+
+export const statuses = [
+	{ status: 'viewed', title: 'Просмотрено' },
+	{ status: 'abandoned', title: 'Брошено' },
+	{ status: 'deferred', title: 'Отложено' },
+	{ status: 'planned', title: 'Запланировано' },
+	{ status: 'reviewing', title: 'Пересматриваю' },
+	{ status: 'looking', title: 'Смотрю' },
+];

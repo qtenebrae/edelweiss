@@ -1,6 +1,7 @@
 .wrapper {
 	display: grid;
 	grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [ratingstart] 240px [ratingend] 1fr [scorestart] 240px [end];
+	gap: 10px 0;
 }
 
 .title {
@@ -9,8 +10,6 @@
 
 .breadcrumbs {
 	grid-column: start / end;
-
-	margin-bottom: 20px;
 }
 
 .poster {
@@ -18,7 +17,9 @@
 }
 
 .information {
+	display: grid;
 	grid-column: informationstart / informationend;
+	gap: 10px 0;
 }
 
 .rating {
@@ -31,20 +32,14 @@
 
 .userrating {
 	grid-column: start / posterend;
-
-	margin-top: 20px;
 }
 
 .description {
 	grid-column: informationstart / ratingend;
-
-	margin-top: 20px;
 }
 
 .participants {
 	grid-column: start / ratingend;
-
-	margin-top: 20px;
 }
 
 .participantsgrid {
@@ -53,14 +48,8 @@
 	gap: 10px;
 }
 
-.actors {
-	grid-column: start / ratingend;
-
-	margin-top: 20px;
-}
-
-.actorsgrid {
+.participant {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: auto 1fr;
 	gap: 10px;
 }

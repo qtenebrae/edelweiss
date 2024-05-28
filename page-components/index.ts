@@ -1,2 +1,2 @@
 export * from './TrendingMovies/TrendingMovies';
-export * from './MovieComponent/MovieComponent';
+export * from './Movie/Movie';

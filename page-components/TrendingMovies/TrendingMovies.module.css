@@ -1,6 +1,11 @@
-.preview {
+.wrapper {
     display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(7, 1fr);
 
-    justify-content: space-between;
+    gap: 5px;
+}
+
+.content {
+    display: grid;
+    gap: 5px;
 }

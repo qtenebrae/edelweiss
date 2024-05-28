@@ -1,13 +1,20 @@
 import { GATEWAY_HOST } from '@/constants';
 import { IMovie } from '@/interfaces';
 import { withLayout } from '@/layout/Layout';
-import { MovieComponent } from '@/page-components';
+import { Movie } from '@/page-components';
+import { Card, CardBody } from '@nextui-org/react';
 import axios from 'axios';
 import { GetServerSidePropsContext } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
 function MoviePage({ movie }: MoviePageProps) {
-	return <MovieComponent movie={movie}></MovieComponent>;
+	return (
+		<Card className="mx-auto px-[10px] pb-[10px] mt-[40px] w-[1200px] bg-background/30 backdrop-blur-[3px]">
+			<CardBody>
+				<Movie movie={movie}></Movie>
+			</CardBody>
+		</Card>
+	);
 }
 
 export default withLayout(MoviePage);

@@ -1,4 +1,4 @@
-export const gateway = '192.168.0.105';
+export const GATEWAY_HOST = '192.168.0.105';
 
 export * from './EdelweissIcon';
 export * from './EyeFilledIcon';

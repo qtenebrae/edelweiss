@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import { createContext, PropsWithChildren, useEffect, useState } from 'react';
 import inMemoryJWT from '@/api/inMemoryJWT';
 import { ISingIn, ISingUp } from '@/interfaces';
-import { gateway } from '@/constants/index';
+import { GATEWAY_HOST } from '@/constants/index';
 import { toast } from 'react-toastify';
 
 export interface IAuthContext {
@@ -15,12 +15,12 @@ export interface IAuthContext {
 }
 
 export const AuthClient = axios.create({
-	baseURL: `http://${gateway}/auth`,
+	baseURL: `http://${GATEWAY_HOST}/auth`,
 	withCredentials: true,
 });
 
 export const ResourceClient = axios.create({
-	baseURL: `http://${gateway}/`,
+	baseURL: `http://${GATEWAY_HOST}/`,
 	withCredentials: true,
 });
 

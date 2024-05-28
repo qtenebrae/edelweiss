@@ -12,6 +12,7 @@ import {
 	Badge,
 	User,
 	useDisclosure,
+	Link,
 } from '@nextui-org/react';
 import { SignIn, SignUp } from '@/components';
 import { useContext } from 'react';
@@ -19,7 +20,6 @@ import { AuthContext } from '@/context/auth.context';
 import { EdelweissIcon, LoupeIcon, NotificationIcon } from '@/constants';
 import cn from 'classnames';
 import { movies } from './data';
-import { Link } from '@nextui-org/link';
 
 export const Header = ({ ...props }: HeaderProps) => {
 	const { isAuth, handleLogOut, handleFetchProtected } = useContext(AuthContext);
@@ -33,7 +33,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 			{...props}
 			className={cn(
 				styles.header,
-				`fixed z-50 w-[100vw] h-[70px] bg-background/40 backdrop-blur-[32px] hover:bg-primary-100/20 hover:shadow-lg`,
+				`fixed z-50 w-[100vw] h-[70px] bg-background/40 backdrop-blur-[32px] hover:bg-background hover:shadow-lg`,
 			)}
 		>
 			<Link href="/movies/1">

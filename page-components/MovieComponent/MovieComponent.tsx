@@ -31,13 +31,11 @@ export const MovieComponent = ({ movie }: MovieComponentProps) => {
 				<Breadcrumbs className={style.breadcrumbs}>
 					<BreadcrumbItem href="/">Главная</BreadcrumbItem>
 					<BreadcrumbItem href="">Кинопроизведения</BreadcrumbItem>
-					<BreadcrumbItem href="">Сериалы</BreadcrumbItem>
 				</Breadcrumbs>
 
 				<Image
 					className={cn(style.poster, 'object-cover w-[200px] h-[300px]')}
-					classNames={{ wrapper: 'w-[200px] h-[300px]' }}
-					src="https://app.requestly.io/delay/5/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+					src="https://app.requestly.io/delay/5000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
 				/>
 
 				<div className={cn(style.information, 'text-[14px]')}>

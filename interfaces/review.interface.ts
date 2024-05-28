@@ -1,4 +1,4 @@
-export interface IFeedback {
+export interface IReview {
 	id: number;
 	movieId: number;
 	header: string;

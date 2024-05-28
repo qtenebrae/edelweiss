@@ -1,4 +1,8 @@
-import { IFeedback } from './feedback.interface';
+import { ICountries } from './countries.interface';
+import { IGenres } from './genres.interface';
+import { IReview } from './review.interface';
+import { IStatus } from './status.interface';
+import { IType } from './type.interface';
 
 export interface IMovie {
 	id: number;
@@ -13,5 +17,9 @@ export interface IMovie {
 	posterUrl: string;
 	typeId: number;
 	statusId: number;
-	feedback: IFeedback[];
+	type: IType;
+	status: IStatus;
+	genres: IGenres[];
+	countries: ICountries[];
+	reviews: IReview[];
 }

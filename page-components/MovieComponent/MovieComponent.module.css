@@ -1,7 +1,6 @@
 .wrapper {
     display: grid;
     grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [ratingstart] 240px [ratingend] 1fr [scorestart] 240px [end];
-    
 }
 
 .title {
@@ -10,6 +9,7 @@
 
 .breadcrumbs {
     grid-column: start / end;
+
     margin-bottom: 20px;
 }
 
@@ -17,14 +17,62 @@
     grid-column: start / posterend;
 }
 
-.informationblock {
+.information {
     grid-column: informationstart / informationend;
 }
 
-.ratingblock {
+.rating {
     grid-column: ratingstart / ratingend;
 }
 
-.scoreblock {
+.score {
     grid-column: scorestart / end;
+}
+
+.userrating {
+    grid-column: start / posterend;
+
+    margin-top: 20px;
+}
+
+.description {
+    grid-column: informationstart / ratingend;
+
+    margin-top: 20px;
+}
+
+.participants {
+    grid-column: start / ratingend;
+
+    margin-top: 20px;
+}
+
+.participantsgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.actors {
+    grid-column: start / ratingend;
+
+    margin-top: 20px;
+}
+
+
+.actorsgrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.reviews {
+    grid-column: start / ratingend;
+
+    margin-top: 20px;
+}
+
+.reviewsgrid {
+    display: grid;
+    grid-template-columns: 1fr;
 }

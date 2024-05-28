@@ -10,11 +10,13 @@
     "slint": "npx stylelint \"**/*.css\" --fix"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.2.9",
+    "@nextui-org/link": "^2.0.22",
+    "@nextui-org/react": "^2.3.6",
     "axios": "^1.7.2",
     "classnames": "^2.3.2",
     "framer-motion": "^11.0.3",
-    "next": "14.0.3",
+    "moment": "^2.30.1",
+    "next": "^14.2.3",
     "react": "^18",
     "react-dom": "^18",
     "react-toastify": "^10.0.5"

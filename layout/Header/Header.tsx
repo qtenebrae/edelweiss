@@ -11,7 +11,6 @@ import {
 	AutocompleteItem,
 	Badge,
 	User,
-	Link,
 	useDisclosure,
 } from '@nextui-org/react';
 import { SignIn, SignUp } from '@/components';
@@ -20,6 +19,7 @@ import { AuthContext } from '@/context/auth.context';
 import { EdelweissIcon, LoupeIcon, NotificationIcon } from '@/constants';
 import cn from 'classnames';
 import { movies } from './data';
+import { Link } from '@nextui-org/link';
 
 export const Header = ({ ...props }: HeaderProps) => {
 	const { isAuth, handleLogOut, handleFetchProtected } = useContext(AuthContext);
@@ -33,7 +33,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 			{...props}
 			className={cn(
 				styles.header,
-				`fixed z-50 w-[100vw] h-[70px] backdrop-blur hover:bg-default-100 hover:shadow-lg`,
+				`fixed z-50 w-[100vw] h-[70px] bg-background/40 backdrop-blur-[32px] hover:bg-primary-100/20 hover:shadow-lg`,
 			)}
 		>
 			<Link href="/movies/1">
@@ -85,7 +85,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 						inputWrapper: ['h-[48px]', 'group-data-[focus=true]:border-secondary-200'],
 					},
 				}}
-				startContent={<LoupeIcon className={cn(styles.loupe, 'w-[22px] h-[22px]')} />}
+				startContent={<LoupeIcon className={cn(styles.loupe, 'w-[24px] h-[24px]')} />}
 			>
 				{movies.map((item) => (
 					<AutocompleteItem

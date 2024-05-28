@@ -1,0 +1,34 @@
+.review {
+    display: grid;
+    grid-template-columns: [start] 160px [userend] 1fr [informationstart] 200px [informationend] 1fr [userscorestart] 200px [userscoreend] 1fr [estimationstart] auto [end];
+}
+
+.user {
+    grid-column: start / userend;
+    justify-self: start;
+}
+
+.information {
+    grid-column: informationstart / informationend;
+}
+
+.userscore {
+    grid-column: userscorestart / userscoreend;
+}
+
+.estimation {
+    grid-column: estimationstart / end;
+    justify-self: end;
+}
+
+.content {
+    grid-column: start / end;
+
+    margin-top: 10px;
+}
+
+.feedback {
+    grid-column: start / end;
+
+    margin-top: 10px; 
+}

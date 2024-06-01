@@ -30,8 +30,8 @@ export const Country = ({ countries, setCountries }: CountryProps) => {
 		event.preventDefault();
 		event.stopPropagation();
 		try {
-			await axios.post(`http://${GATEWAY_HOST}/catalog/contry/create`, { title: country });
-			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/contry/findAll`);
+			await axios.post(`http://${GATEWAY_HOST}/catalog/country/create`, { title: country });
+			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/country/findAll`);
 			setCountries(countries.data);
 
 			toast.success('Добавлено!');
@@ -42,8 +42,8 @@ export const Country = ({ countries, setCountries }: CountryProps) => {
 
 	const deleteCountry = async (id: number) => {
 		try {
-			await axios.delete(`http://${GATEWAY_HOST}/catalog/contry/delete`, { data: { id } });
-			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/contry/findAll`);
+			await axios.delete(`http://${GATEWAY_HOST}/catalog/country/delete`, { data: { id } });
+			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/country/findAll`);
 			setCountries(countries.data);
 
 			toast.success('Успешное удаление!');
@@ -96,7 +96,7 @@ export const Country = ({ countries, setCountries }: CountryProps) => {
 			<form action="POST" onSubmit={createCountry} className="w-full grid gap-[10px]">
 				<Input
 					type="text"
-					label="Название типа"
+					label="Название страны"
 					value={country}
 					onValueChange={setCountry}
 					isRequired

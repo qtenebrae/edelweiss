@@ -12,8 +12,8 @@ import {
 } from '@nextui-org/react';
 import { DeleteIcon, EditIcon, GATEWAY_HOST } from '@/constants';
 import { useState, useMemo, useCallback, FormEvent } from 'react';
-import { StatusProps } from './Status.props';
-import { IStatus } from '@/interfaces';
+import { ProfessionProps } from './Profession.props';
+import { IProfession } from '@/interfaces';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
@@ -23,16 +23,16 @@ const columns = [
 	{ name: 'Действия', uid: 'actions' },
 ];
 
-export const Status = ({ statuses, setStatuses }: StatusProps) => {
-	const [status, setStatus] = useState<string>();
+export const Profession = ({ professions, setProfessions }: ProfessionProps) => {
+	const [profession, setProfession] = useState<string>();
 
-	const createStatus = async (event: FormEvent<HTMLFormElement>) => {
+	const createProfession = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		event.stopPropagation();
 		try {
-			await axios.post(`http://${GATEWAY_HOST}/catalog/status/create`, { title: status });
-			const statuses = await axios.get(`http://${GATEWAY_HOST}/catalog/status/findAll`);
-			setStatuses(statuses.data);
+			await axios.post(`http://${GATEWAY_HOST}/catalog/profession/create`, { title: profession });
+			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/profession/findAll`);
+			setProfessions(countries.data);
 
 			toast.success('Добавлено!');
 		} catch {
@@ -40,11 +40,11 @@ export const Status = ({ statuses, setStatuses }: StatusProps) => {
 		}
 	};
 
-	const deleteStatus = async (id: number) => {
+	const deleteProfession = async (id: number) => {
 		try {
-			await axios.delete(`http://${GATEWAY_HOST}/catalog/status/delete`, { data: { id } });
-			const statuses = await axios.get(`http://${GATEWAY_HOST}/catalog/status/findAll`);
-			setStatuses(statuses.data);
+			await axios.delete(`http://${GATEWAY_HOST}/catalog/profession/delete`, { data: { id } });
+			const countries = await axios.get(`http://${GATEWAY_HOST}/catalog/profession/findAll`);
+			setProfessions(countries.data);
 
 			toast.success('Успешное удаление!');
 		} catch {
@@ -52,8 +52,8 @@ export const Status = ({ statuses, setStatuses }: StatusProps) => {
 		}
 	};
 
-	const renderCell = useCallback((status: IStatus, columnKey) => {
-		const cellValue = status[columnKey];
+	const renderCell = useCallback((profession: IProfession, columnKey) => {
+		const cellValue = profession[columnKey];
 
 		switch (columnKey) {
 			case 'actions':
@@ -67,7 +67,7 @@ export const Status = ({ statuses, setStatuses }: StatusProps) => {
 						<Tooltip content="Удалить">
 							<span
 								className="text-lg text-danger cursor-pointer active:opacity-50"
-								onClick={() => deleteStatus(status.id)}
+								onClick={() => deleteProfession(profession.id)}
 							>
 								<DeleteIcon />
 							</span>
@@ -82,23 +82,23 @@ export const Status = ({ statuses, setStatuses }: StatusProps) => {
 	const [page, setPage] = useState(1);
 	const rowsPerPage = 5;
 
-	const pages = Math.ceil(statuses.length / rowsPerPage);
+	const pages = Math.ceil(professions.length / rowsPerPage);
 
-	const items = useMemo<IStatus[]>(() => {
+	const items = useMemo<IProfession[]>(() => {
 		const start = (page - 1) * rowsPerPage;
 		const end = start + rowsPerPage;
 
-		return statuses.slice(start, end);
-	}, [page, statuses]);
+		return professions.slice(start, end);
+	}, [page, professions]);
 
 	return (
 		<div className="w-full grid gap-[10px]">
-			<form action="POST" onSubmit={createStatus} className="w-full grid gap-[10px]">
+			<form action="POST" onSubmit={createProfession} className="w-full grid gap-[10px]">
 				<Input
 					type="text"
-					label="Название статуса"
-					value={status}
-					onValueChange={setStatus}
+					label="Название профессии"
+					value={profession}
+					onValueChange={setProfession}
 					isRequired
 				></Input>
 				<Button className="w-full" type="submit">

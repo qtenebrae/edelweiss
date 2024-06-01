@@ -96,7 +96,7 @@ export const Genre = ({ genres, setGenres }: GenreProps) => {
 			<form action="POST" onSubmit={createGenre} className="w-full grid gap-[10px]">
 				<Input
 					type="text"
-					label="Название типа"
+					label="Название жанра"
 					value={genre}
 					onValueChange={setGenre}
 					isRequired

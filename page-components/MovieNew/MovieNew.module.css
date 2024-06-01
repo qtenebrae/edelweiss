@@ -1,7 +1,7 @@
 .wrapper {
 	display: grid;
 	gap: 10px 0;
-	grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [ratingstart] 240px [ratingend] 1fr [scorestart] 240px [end];
+	grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [actionstart] 240px [actionend] 1fr [participant_actions] 240px [end];
 }
 
 .title {
@@ -27,23 +27,22 @@
 .actions {
 	display: grid;
 	gap: 10px 0;
-	grid-column: ratingstart / ratingend;
+	grid-column: actionstart / actionend;
 }
 
-.score {
-	grid-column: scorestart / end;
+.participantActions {
+	display: grid;
+	gap: 10px 0;
+	grid-column: participant_actions / end;
 }
 
-.userrating {
-	grid-column: start / posterend;
-}
 
 .description {
-	grid-column: informationstart / ratingend;
+	grid-column: informationstart / actionend;
 }
 
 .participants {
-	grid-column: start / ratingend;
+	grid-column: start / actionend;
 }
 
 .participantsgrid {

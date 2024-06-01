@@ -19,34 +19,40 @@ import style from './MovieNew.module.css';
 import cn from 'classnames';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { CalendarIcon, GATEWAY_HOST } from '@/constants';
-import { Type, Status, Genre, Country } from '@/components';
-import { ICountry, IGenre, IStatus, IType } from '@/interfaces';
+import { Type, Status, Genre, Country, Profession } from '@/components';
+import { ICountry, IGenre, IProfession, IStatus, IType } from '@/interfaces';
 import { parseDate, getLocalTimeZone } from '@internationalized/date';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
 export const MovieNew = ({ ...props }: MovieNewProps) => {
-	const genres_added: IGenre[] = [];
-	const countries_added: ICountry[] = [];
+	const [genresAdded, setGenresAdded] = useState<IGenre[]>([]);
+	const [countriesAdded, setCountriesAdded] = useState<ICountry[]>([]);
 
 	const [types, setTypes] = useState<IType[]>([]);
 	const [statuses, setStatuses] = useState<IStatus[]>([]);
 	const [genres, setGenres] = useState<IGenre[]>([]);
 	const [countries, setCountries] = useState<ICountry[]>([]);
+	const [professions, setProfessions] = useState<IProfession[]>([]);
+
+	const [poster, setPoster] = useState<File | null>(null);
+	const [posterPreview, setPosterPreview] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const [types, statuses, genres, countries] = await Promise.all([
+				const [types, statuses, genres, countries, professions] = await Promise.all([
 					axios.get(`http://${GATEWAY_HOST}/catalog/type/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/status/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/genre/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/country/findAll`),
+					axios.get(`http://${GATEWAY_HOST}/catalog/profession/findAll`),
 				]);
 				setTypes(types.data);
 				setStatuses(statuses.data);
 				setGenres(genres.data);
 				setCountries(countries.data);
+				setProfessions(professions.data);
 			} catch {
 				//
 			}
@@ -60,7 +66,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 	const [statusId, setStatusId] = useState<string>();
 	const [duration, setDuration] = useState<string>();
 	const [numberOfEpisodes, setNumberOfEpisodes] = useState<string>();
-	const [release, setRelease] = useState<CalendarDate>(parseDate('2024-04-04'));
+	const [release, setRelease] = useState<CalendarDate>(parseDate('2001-01-01'));
 	const [ageLimit, setAgeLimit] = useState<string>();
 	const [description, setDescription] = useState<string>();
 
@@ -76,8 +82,32 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		event.preventDefault();
 		event.stopPropagation();
 
+		let filename = '';
+
+		if (poster) {
+			const formData = new FormData();
+			formData.append('poster', poster);
+
+			try {
+				const response = await axios.post(
+					`http://${GATEWAY_HOST}/catalog/movie/uploadPoster`,
+					formData,
+					{
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					},
+				);
+
+				filename = response.data.filename;
+				console.log(response.data);
+			} catch (error) {
+				//
+			}
+		}
+
 		try {
-			await axios.post(`http://${GATEWAY_HOST}/catalog/movie/create`, {
+			const response = await axios.post(`http://${GATEWAY_HOST}/catalog/movie/create`, {
 				title,
 				alternativeTitle,
 				typeId: Number(typeId),
@@ -88,12 +118,44 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 				ageLimit: Number(ageLimit),
 				description,
 				rating: 0,
-				posterUrl: 'wa',
+				posterUrl: filename,
+				genresId: genresAdded.map((item) => item.id),
+				countriesId: countriesAdded.map((item) => item.id),
 			});
+
+			console.log(response.data);
 
 			toast.success('Кинопроивзедение добавлено!');
 		} catch (error) {
-			toast.error('Произошла ошибка!');
+			toast.error('Ошибка добавления!');
+		}
+	};
+
+	const handleAddGenre = (genre: IGenre) => {
+		if (!genresAdded.some((g) => g.id === genre.id)) {
+			setGenresAdded((prevGenres) => [...prevGenres, genre]);
+		}
+	};
+
+	const handleAddCountry = (country: ICountry) => {
+		if (!countriesAdded.some((c) => c.id === country.id)) {
+			setCountriesAdded((prevCountries) => [...prevCountries, country]);
+		}
+	};
+
+	const handleRemoveGenre = (genre: IGenre) => {
+		setGenresAdded((prevGenres) => prevGenres.filter((g) => g.id !== genre.id));
+	};
+
+	const handleRemoveCountry = (country: ICountry) => {
+		setCountriesAdded((prevCountries) => prevCountries.filter((c) => c.id !== country.id));
+	};
+
+	const handlePosterChange = (event: ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0];
+		if (file) {
+			setPoster(file);
+			setPosterPreview(URL.createObjectURL(file));
 		}
 	};
 
@@ -121,11 +183,21 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 				<BreadcrumbItem href="">Кинопроизведения</BreadcrumbItem>
 			</Breadcrumbs>
 
-			<Image
-				className={cn(style.poster, 'object-cover w-[200px] h-[300px]')}
-				classNames={{ wrapper: 'w-[200px] h-[300px]' }}
-				src="https://app.requestly.io/delay/5000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
-			/>
+			<div className={style.poster}>
+				<Image
+					className="object-cover w-[200px] h-[300px]"
+					classNames={{ wrapper: 'w-[200px] h-[300px]' }}
+					src={posterPreview ? posterPreview : `http://${GATEWAY_HOST}/uploads/404.gif`}
+				/>
+
+				<Input
+					type="file"
+					accept="image/*"
+					onChange={handlePosterChange}
+					color="secondary"
+					className="block mt-[10px]"
+				/>
+			</div>
 
 			<div className={cn(style.information, 'text-[14px]')}>
 				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
@@ -195,36 +267,78 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 				<div className="font-bold">
 					Жанры:
-					{genres_added.map((genre) => (
-						<Chip key={genre.id} size="sm" className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md">
+					{genresAdded.map((genre) => (
+						<Chip
+							key={genre.id}
+							size="sm"
+							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							onClick={() => handleRemoveGenre(genre)}
+						>
 							{genre.title}
 						</Chip>
 					))}
-					<Chip
-						size="sm"
-						className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
-					>
-						Добавить
-					</Chip>
+					<Popover placement="right">
+						<PopoverTrigger>
+							<Chip
+								size="sm"
+								className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							>
+								Добавить
+							</Chip>
+						</PopoverTrigger>
+						<PopoverContent className="p-[20px] gap-[10px] w-[360px] h-[200px]">
+							<div>
+								{genres.map((genre) => (
+									<Chip
+										size="sm"
+										className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+										key={genre.id}
+										onClick={() => handleAddGenre(genre)}
+									>
+										{genre.title}
+									</Chip>
+								))}
+							</div>
+						</PopoverContent>
+					</Popover>
 				</div>
 
 				<div className="font-bold">
 					Страны производства:
-					{countries_added.map((country) => (
+					{countriesAdded.map((country) => (
 						<Chip
 							key={country.id}
 							size="sm"
-							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md"
+							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							onClick={() => handleRemoveCountry(country)}
 						>
 							{country.title}
 						</Chip>
 					))}
-					<Chip
-						size="sm"
-						className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
-					>
-						Добавить
-					</Chip>
+					<Popover placement="right">
+						<PopoverTrigger>
+							<Chip
+								size="sm"
+								className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							>
+								Добавить
+							</Chip>
+						</PopoverTrigger>
+						<PopoverContent className="p-[20px] gap-[10px] w-[360px] h-[200px]">
+							<div>
+								{countries.map((country) => (
+									<Chip
+										size="sm"
+										className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+										key={country.id}
+										onClick={() => handleAddCountry(country)}
+									>
+										{country.title}
+									</Chip>
+								))}
+							</div>
+						</PopoverContent>
+					</Popover>
 				</div>
 
 				<Input
@@ -285,9 +399,37 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					</PopoverContent>
 				</Popover>
 
-				<Button color="secondary" variant="flat" className="w-max-full w-full" type="submit">
+				<Button color="primary" variant="flat" className="w-max-full w-full" type="submit">
 					Добавить фильм
 				</Button>
+			</div>
+
+			<div className={style.participantActions}>
+				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+					Работники кино
+				</Chip>
+
+				<Popover placement="right">
+					<PopoverTrigger>
+						<Button color="secondary" variant="flat" className="w-max-full w-full">
+							Профессии
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="p-[20px] gap-[10px]">
+						<Profession professions={professions} setProfessions={setProfessions}></Profession>
+					</PopoverContent>
+				</Popover>
+
+				<Popover placement="right">
+					<PopoverTrigger>
+						<Button color="secondary" variant="flat" className="w-max-full w-full">
+							Работники кино
+						</Button>
+					</PopoverTrigger>
+					<PopoverContent className="p-[20px] gap-[10px]">
+						<Profession professions={professions} setProfessions={setProfessions}></Profession>
+					</PopoverContent>
+				</Popover>
 			</div>
 
 			<div className={style.description}>

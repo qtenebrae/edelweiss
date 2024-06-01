@@ -19,7 +19,7 @@ function MoviePage({ movie }: MoviePageProps) {
 
 export default withLayout(MoviePage);
 
-export async function getServerSideProps<Movie>({
+export async function getServerSideProps<MoviePageProps>({
 	params,
 }: GetServerSidePropsContext<ParsedUrlQuery>) {
 	if (!params) {
@@ -29,7 +29,7 @@ export async function getServerSideProps<Movie>({
 	}
 
 	try {
-		const { data: movie } = await axios.get<Movie>(
+		const { data: movie } = await axios.get<IMovie>(
 			`http://${GATEWAY_HOST}/catalog/movie/findById/${params.id}`,
 		);
 

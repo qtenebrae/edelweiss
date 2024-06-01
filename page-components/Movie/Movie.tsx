@@ -23,6 +23,7 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 
 			<Image
 				className={cn(style.poster, 'object-cover w-[200px] h-[300px]')}
+				classNames={{ wrapper: 'w-[200px] h-[300px]' }}
 				src="https://app.requestly.io/delay/5000/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
 			/>
 

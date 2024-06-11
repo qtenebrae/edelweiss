@@ -98,7 +98,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 				))}
 			</Autocomplete>
 
-			<Badge
+			{/* <Badge
 				content="99+"
 				shape="circle"
 				classNames={{
@@ -115,7 +115,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 				>
 					<NotificationIcon className="w-8 h-8" />
 				</Button>
-			</Badge>
+			</Badge> */}
 
 			{!isAuth && (
 				<div className="flex">

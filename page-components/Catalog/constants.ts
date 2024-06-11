@@ -43,15 +43,6 @@ export const movies = [
 		title_rus: 'Достать ножи ',
 		title_eng: 'Knives Out',
 	},
-];
-
-export const movies1 = [
-	{
-		id: 7,
-		src: `http://${GATEWAY_HOST}/uploads/7.jfif`,
-		title_rus: 'Достать ножи ',
-		title_eng: 'Knives Out',
-	},
 	{
 		id: 8,
 		src: `http://${GATEWAY_HOST}/uploads/8.jpg`,
@@ -70,7 +61,18 @@ export const movies1 = [
 		title_rus: 'Брат 2',
 		title_eng: 'Brother 2',
 	},
-
+	{
+		id: 11,
+		src: `http://${GATEWAY_HOST}/uploads/11.jpg`,
+		title_rus: 'Бойцовский клуб',
+		title_eng: 'Fight Club',
+	},
+	{
+		id: 12,
+		src: `http://${GATEWAY_HOST}/uploads/12.jfif`,
+		title_rus: 'Игра престолов',
+		title_eng: 'Game of Thrones',
+	},
 	{
 		id: 13,
 		src: `http://${GATEWAY_HOST}/uploads/13.jfif`,
@@ -92,12 +94,12 @@ export const movies1 = [
 ];
 
 export const movie = {
-	title: 'Унесённые призраками',
-	plot: 'Тихиро с мамой и папой переезжает в новый дом. Заблудившись по дороге, они оказываются встранном пустынном городе, где их ждет великолепный...',
-	genres: ['Аниме', 'Мультфильм', 'Приключения'],
-	director: 'Хаяо Миядзаки',
-	agelimit: '12',
-	rating: 8.52,
+	title: 'Брат 2',
+	plot: 'Участвуя в программе на телевидении, Данила Багров встречает своих друзей по службе в Чечне. Одного из них внезапно убивают. Выясняется, что у того были неприятности из-за брата-хоккеиста в Америке. Данила должен разобрат...',
+	genres: ['Боевик', 'Криминал'],
+	director: 'Алексей Балабанов',
+	agelimit: '18',
+	rating: 8.22,
 };
 
 export const statuses = [
@@ -107,30 +109,4 @@ export const statuses = [
 	{ status: 'planned', title: 'Запланировано' },
 	{ status: 'reviewing', title: 'Пересматриваю' },
 	{ status: 'looking', title: 'Смотрю' },
-];
-
-export const genres = [
-	{ id: 1, title: '#Комедия' },
-	{ id: 2, title: '#Детектив' },
-	{ id: 3, title: '#Фантастика' },
-	{ id: 4, title: '#Боевик' },
-	{ id: 5, title: '#Драма' },
-	{ id: 6, title: '#Мистика' },
-	{ id: 7, title: '#Ужасы' },
-	{ id: 8, title: '#Романтика' },
-	{ id: 9, title: '#Приключения' },
-	{ id: 10, title: '#Триллер' },
-];
-
-export const genres2 = [
-	{ id: 11, title: '#Фэнтези' },
-	{ id: 12, title: '#Мелодрама' },
-	{ id: 13, title: '#Криминал' },
-	{ id: 14, title: '#Исторический' },
-	{ id: 15, title: '#Научная фантастика' },
-	{ id: 16, title: '#Вестерн' },
-	{ id: 17, title: '#Биография' },
-	{ id: 18, title: '#Военный' },
-	{ id: 19, title: '#Музыкальный' },
-	{ id: 20, title: '#Семейный' },
 ];

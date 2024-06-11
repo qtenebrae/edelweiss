@@ -1,4 +1,4 @@
-export const GATEWAY_HOST = '192.168.0.105';
+export const GATEWAY_HOST = '192.168.0.104';
 
 export * from './EdelweissIcon';
 export * from './EyeFilledIcon';
@@ -14,3 +14,4 @@ export * from './ChevronDownIcon';
 export * from './SearchIcon';
 export * from './PlusIcon';
 export * from './VerticalDotsIcon';
+export * from './CloseIcon';

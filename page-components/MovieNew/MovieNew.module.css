@@ -1,7 +1,7 @@
 .wrapper {
 	display: grid;
 	gap: 10px 0;
-	grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [actionstart] 240px [actionend] 1fr [participant_actions] 240px [end];
+	grid-template-columns: [start] 200px [posterend] 1fr [informationstart] 240px [informationend] 1fr [actionstart] 240px [actionend] 1fr [participantstart] 240px [end];
 }
 
 .title {
@@ -33,7 +33,7 @@
 .participantActions {
 	display: grid;
 	gap: 10px 0;
-	grid-column: participant_actions / end;
+	grid-column: participantstart / end;
 }
 
 

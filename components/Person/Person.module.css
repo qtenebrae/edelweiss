@@ -1,0 +1,17 @@
+.form {
+    display: grid;
+    grid-template-columns: [start] 200px [photoend] 1fr [end];
+}
+
+.left {
+    grid-column: start / photoend;
+    grid-row: 1 / 7;
+}
+
+.right {
+    grid-column: photoend / end;
+}
+
+.button {
+    grid-column: start / end;
+}

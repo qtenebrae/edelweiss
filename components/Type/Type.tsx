@@ -14,8 +14,8 @@ import { DeleteIcon, EditIcon, GATEWAY_HOST } from '@/constants';
 import { useState, useMemo, useCallback, FormEvent } from 'react';
 import { TypeProps } from './Type.props';
 import { IType } from '@/interfaces';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const columns = [
 	{ name: 'Id', uid: 'id' },

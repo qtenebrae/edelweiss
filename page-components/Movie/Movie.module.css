@@ -53,3 +53,14 @@
 	grid-template-columns: auto 1fr;
 	gap: 10px;
 }
+
+.distribution {
+	display: grid;
+	gap: 5px;
+}
+
+.distributionItem {
+	display: grid;
+	grid-template-columns: 20px 20px auto;
+	gap: 5px;
+}

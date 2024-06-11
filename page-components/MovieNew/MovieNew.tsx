@@ -1,3 +1,4 @@
+import { MovieNewProps } from './MovieNew.props';
 import {
 	Breadcrumbs,
 	BreadcrumbItem,
@@ -14,26 +15,27 @@ import {
 	PopoverContent,
 	CalendarDate,
 } from '@nextui-org/react';
-import { MovieNewProps } from './MovieNew.props';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { Type, Status, Genre, Country, Profession, Person } from '@/components';
+import { ICountry, IGenre, IPerson, IProfession, IStatus, IType } from '@/interfaces';
+import { CalendarIcon, CloseIcon, GATEWAY_HOST } from '@/constants';
+import { parseDate, getLocalTimeZone } from '@internationalized/date';
+import { toast } from 'react-toastify';
 import style from './MovieNew.module.css';
 import cn from 'classnames';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { CalendarIcon, GATEWAY_HOST } from '@/constants';
-import { Type, Status, Genre, Country, Profession } from '@/components';
-import { ICountry, IGenre, IProfession, IStatus, IType } from '@/interfaces';
-import { parseDate, getLocalTimeZone } from '@internationalized/date';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 export const MovieNew = ({ ...props }: MovieNewProps) => {
 	const [genresAdded, setGenresAdded] = useState<IGenre[]>([]);
 	const [countriesAdded, setCountriesAdded] = useState<ICountry[]>([]);
+	const [participantsAdded, setParticipantsAdded] = useState<>([]);
 
 	const [types, setTypes] = useState<IType[]>([]);
 	const [statuses, setStatuses] = useState<IStatus[]>([]);
 	const [genres, setGenres] = useState<IGenre[]>([]);
 	const [countries, setCountries] = useState<ICountry[]>([]);
 	const [professions, setProfessions] = useState<IProfession[]>([]);
+	const [persons, setPersons] = useState<IPerson[]>([]);
 
 	const [poster, setPoster] = useState<File | null>(null);
 	const [posterPreview, setPosterPreview] = useState<string | null>(null);
@@ -41,18 +43,20 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const [types, statuses, genres, countries, professions] = await Promise.all([
+				const [types, statuses, genres, countries, professions, persons] = await Promise.all([
 					axios.get(`http://${GATEWAY_HOST}/catalog/type/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/status/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/genre/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/country/findAll`),
 					axios.get(`http://${GATEWAY_HOST}/catalog/profession/findAll`),
+					axios.get(`http://${GATEWAY_HOST}/catalog/person/findAll`),
 				]);
 				setTypes(types.data);
 				setStatuses(statuses.data);
 				setGenres(genres.data);
 				setCountries(countries.data);
 				setProfessions(professions.data);
+				setPersons(persons.data);
 			} catch {
 				//
 			}
@@ -100,7 +104,6 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 				);
 
 				filename = response.data.filename;
-				console.log(response.data);
 			} catch (error) {
 				//
 			}
@@ -160,7 +163,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 	};
 
 	return (
-		<form className={style.wrapper} {...props} method="POST" onSubmit={createMovie}>
+		<form className={style.wrapper} method="POST" onSubmit={createMovie} {...props}>
 			<div className={style.title}>
 				<Input
 					type="text"
@@ -169,6 +172,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					onValueChange={setTitle}
 					isRequired
 				></Input>
+
 				<Input
 					type="text"
 					label="Альтернативное название"
@@ -180,37 +184,42 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 			<Breadcrumbs className={style.breadcrumbs}>
 				<BreadcrumbItem href="/">Главная</BreadcrumbItem>
-				<BreadcrumbItem href="">Кинопроизведения</BreadcrumbItem>
+				<BreadcrumbItem href="">Фильмы</BreadcrumbItem>
 			</Breadcrumbs>
 
 			<div className={style.poster}>
-				<Image
-					className="object-cover w-[200px] h-[300px]"
-					classNames={{ wrapper: 'w-[200px] h-[300px]' }}
-					src={posterPreview ? posterPreview : `http://${GATEWAY_HOST}/uploads/404.gif`}
-				/>
+				<label htmlFor="poster">
+					<Image
+						className="object-cover w-[200px] h-[300px]"
+						classNames={{ wrapper: 'w-[200px] h-[300px]' }}
+						src={posterPreview ? posterPreview : `http://${GATEWAY_HOST}/uploads/404.jpg`}
+					/>
+				</label>
 
-				<Input
+				<label htmlFor="poster">
+					<Chip className="w-[200px] mt-[10px] max-w-full text-default-900 bg-gradient-to-tr from-secondary-200 to-primary-100 shadow-lg">
+						Добавить файл
+					</Chip>
+				</label>
+
+				<input
+					id="poster"
 					type="file"
 					accept="image/*"
 					onChange={handlePosterChange}
-					color="secondary"
-					className="block mt-[10px]"
+					className="hidden"
 				/>
 			</div>
 
 			<div className={cn(style.information, 'text-[14px]')}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
+				>
 					Информация
 				</Chip>
 
-				<Select
-					radius="md"
-					label="Тип"
-					selectedKeys={typeId}
-					onChange={handleSelectionType}
-					isRequired
-				>
+				<Select label="Тип" selectedKeys={typeId} onChange={handleSelectionType} isRequired>
 					{types.map((item) => (
 						<SelectItem key={item.id}>{item.title}</SelectItem>
 					))}
@@ -242,21 +251,14 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					}
 				></Input>
 
-				<Select
-					radius="md"
-					label="Статус"
-					selectedKeys={statusId}
-					onChange={handleSelectionStatus}
-					isRequired
-				>
+				<Select label="Статус" selectedKeys={statusId} onChange={handleSelectionStatus} isRequired>
 					{statuses.map((item) => (
 						<SelectItem key={item.id}>{item.title}</SelectItem>
 					))}
 				</Select>
 
 				<DateInput
-					label={'Дата выхода'}
-					className="max-w-full"
+					label="Дата выхода"
 					startContent={
 						<CalendarIcon className="text-2xl text-default-400 pointer-events-none flex-shrink-0" />
 					}
@@ -271,8 +273,9 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 						<Chip
 							key={genre.id}
 							size="sm"
-							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
 							onClick={() => handleRemoveGenre(genre)}
+							endContent={<CloseIcon className="w-[16px] h-[16px] stroke-default-500" />}
 						>
 							{genre.title}
 						</Chip>
@@ -281,7 +284,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 						<PopoverTrigger>
 							<Chip
 								size="sm"
-								className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+								className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
 							>
 								Добавить
 							</Chip>
@@ -291,7 +294,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 								{genres.map((genre) => (
 									<Chip
 										size="sm"
-										className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
 										key={genre.id}
 										onClick={() => handleAddGenre(genre)}
 									>
@@ -309,8 +312,9 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 						<Chip
 							key={country.id}
 							size="sm"
-							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+							className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
 							onClick={() => handleRemoveCountry(country)}
+							endContent={<CloseIcon className="w-[16px] h-[16px] stroke-default-500" />}
 						>
 							{country.title}
 						</Chip>
@@ -319,7 +323,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 						<PopoverTrigger>
 							<Chip
 								size="sm"
-								className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+								className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
 							>
 								Добавить
 							</Chip>
@@ -329,7 +333,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 								{countries.map((country) => (
 									<Chip
 										size="sm"
-										className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
 										key={country.id}
 										onClick={() => handleAddCountry(country)}
 									>
@@ -351,13 +355,20 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 			</div>
 
 			<div className={style.actions}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
+				>
 					Действия
 				</Chip>
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Тип кинопроизведения
 						</Button>
 					</PopoverTrigger>
@@ -368,7 +379,11 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Статус кинопроизведения
 						</Button>
 					</PopoverTrigger>
@@ -379,7 +394,11 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Жанр кинопроизведения
 						</Button>
 					</PopoverTrigger>
@@ -390,7 +409,11 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Страна производства
 						</Button>
 					</PopoverTrigger>
@@ -399,19 +422,31 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					</PopoverContent>
 				</Popover>
 
-				<Button color="primary" variant="flat" className="w-max-full w-full" type="submit">
+				<Button
+					color="success"
+					variant="flat"
+					className="w-max-full w-full shadow-lg"
+					type="submit"
+				>
 					Добавить фильм
 				</Button>
 			</div>
 
 			<div className={style.participantActions}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900"
+				>
 					Работники кино
 				</Chip>
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Профессии
 						</Button>
 					</PopoverTrigger>
@@ -422,12 +457,16 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 				<Popover placement="right">
 					<PopoverTrigger>
-						<Button color="secondary" variant="flat" className="w-max-full w-full">
+						<Button
+							color="secondary"
+							variant="flat"
+							className="w-max-full w-full bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900 shadow-lg"
+						>
 							Работники кино
 						</Button>
 					</PopoverTrigger>
 					<PopoverContent className="p-[20px] gap-[10px]">
-						<Profession professions={professions} setProfessions={setProfessions}></Profession>
+						<Person persons={persons} setPersons={setPersons}></Person>
 					</PopoverContent>
 				</Popover>
 			</div>
@@ -435,7 +474,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 			<div className={style.description}>
 				<Chip
 					variant="shadow"
-					className="block max-w-full text-[18px] mb-[10px] bg-secondary-200/70"
+					className="block max-w-full text-[18px] mb-[10px] bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900"
 				>
 					Описание
 				</Chip>
@@ -452,7 +491,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 			<div className={style.participants}>
 				<Chip
 					variant="shadow"
-					className="block max-w-full mb-[10px] text-[18px] bg-secondary-200/70"
+					className="block max-w-full mb-[10px] text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900"
 				>
 					Авторы
 				</Chip>
@@ -469,37 +508,10 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 								Райан Госуслуги
 								<div className="font-bold">
 									Роль:
-									<Chip size="sm" className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md">
-										Режиссер
-									</Chip>
-								</div>
-							</div>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<div className={style.participants}>
-				<Chip
-					variant="shadow"
-					className="block max-w-full mb-[10px] text-[18px] bg-secondary-200/70"
-				>
-					Персонажи
-				</Chip>
-
-				<div className={style.participantsgrid}>
-					{statuses.map(() => (
-						<div className={style.participant}>
-							<Image
-								className={cn(style.pass, 'object-cover w-[60px] h-[90px]')}
-								src="https://app.requestly.io/delay/5/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
-							/>
-
-							<div>
-								Райан Госуслуги
-								<div className="font-bold">
-									Актер:
-									<Chip size="sm" className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md">
+									<Chip
+										size="sm"
+										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
+									>
 										Режиссер
 									</Chip>
 								</div>

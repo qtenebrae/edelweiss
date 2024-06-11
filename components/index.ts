@@ -7,3 +7,4 @@ export * from './Status/Status';
 export * from './Genre/Genre';
 export * from './Country/Country';
 export * from './Profession/Profession';
+export * from './Person/Person';

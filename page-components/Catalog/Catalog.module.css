@@ -1,0 +1,31 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: [start] 300px [filterend] 30px [catalogstart] auto [end];
+    gap: 10px 0;
+}
+
+.title {
+    grid-column: start / end;
+}
+
+.information {
+    grid-column: start / end;
+}
+
+.filter {
+    grid-column: start / filterend;
+    gap: 10px 0;
+    
+}
+
+.catalog {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-column: catalogstart / end;
+    gap: 10px 0;
+}
+
+.content {
+    display: grid;
+    gap: 5px;
+}

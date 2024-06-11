@@ -5,11 +5,56 @@ import cn from 'classnames';
 import moment from 'moment';
 import { Rating } from '@/components/Rating/Rating';
 import { useState } from 'react';
-import { movieRatings, statuses } from './constants';
-import { GATEWAY_HOST } from '@/constants';
+import { movieRatings, statuses, workers } from './constants';
+import { GATEWAY_HOST, StarIcon } from '@/constants';
+
+const scores = [
+	{
+		title: '10',
+		value: 5,
+	},
+	{
+		title: '9',
+		value: 0,
+	},
+	{
+		title: '8',
+		value: 7,
+	},
+	{
+		title: '6',
+		value: 2,
+	},
+	{
+		title: '5',
+		value: 0,
+	},
+	{
+		title: '4',
+		value: 0,
+	},
+	{
+		title: '3',
+		value: 0,
+	},
+	{
+		title: '2',
+		value: 0,
+	},
+	{
+		title: '1',
+		value: 0,
+	},
+];
+
+const all = 14;
 
 export const Movie = ({ movie, ...props }: MovieProps) => {
 	const [rating, setRating] = useState<number>(0);
+
+	const distribution = (score, all) => {
+		return (score * 100) / all;
+	};
 
 	return (
 		<div className={style.wrapper} {...props}>
@@ -29,7 +74,10 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 			/>
 
 			<div className={cn(style.information, 'text-[14px]')}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
+				>
 					Информация
 				</Chip>
 
@@ -66,7 +114,7 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 						<Chip
 							key={genre.genreId}
 							size="sm"
-							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md"
+							className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md hover:from-secondary-300 hover:to-primary-200"
 						>
 							{genre.genre.title}
 						</Chip>
@@ -79,7 +127,7 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 						<Chip
 							key={country.countryId}
 							size="sm"
-							className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md"
+							className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md hover:from-secondary-300 hover:to-primary-200"
 						>
 							{country.country.title}
 						</Chip>
@@ -93,7 +141,10 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 			</div>
 
 			<div className={style.rating}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
+				>
 					Рейтинг
 				</Chip>
 
@@ -107,9 +158,30 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 			</div>
 
 			<div className={style.score}>
-				<Chip variant="shadow" className="block max-w-full text-[18px] bg-secondary-200/70">
+				<Chip
+					variant="shadow"
+					className="block max-w-full text-[18px] mb-[10px] bg-gradient-to-tr from-secondary-200 to-primary-100"
+				>
 					Оценки людей
 				</Chip>
+
+				<div className={style.distribution}>
+					{scores.map((item) => {
+						if (item.value != 0)
+							return (
+								<div className={style.distributionItem}>
+									<div className="justify-self-center">{item.title}</div>
+									<StarIcon className="w-[20px] h-[20px] fill-secondary-200" />
+									<div
+										className="block bg-gradient-to-tr from-secondary-100 to-primary-50 w-[100px] ml-[10px] rounded-[20px] text-center"
+										style={{ width: `${distribution(item.value, all)}%` }}
+									>
+										{item.value}
+									</div>
+								</div>
+							);
+					})}
+				</div>
 			</div>
 
 			<div className={style.userrating}>
@@ -119,7 +191,9 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 					placeholder="Добавить в список"
 					classNames={{
 						value: 'text-default-900',
-						trigger: 'h-[32px] min-h-0 shadow-lg bg-secondary-200/70 ',
+						trigger:
+							'h-[32px] min-h-0 shadow-lg bg-gradient-to-tr from-secondary-200 to-primary-100',
+						popoverContent: 'bg-gradient-to-tr from-secondary-200 to-primary-100',
 					}}
 				>
 					{statuses.map((item) => (
@@ -148,7 +222,7 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 			<div className={style.description}>
 				<Chip
 					variant="shadow"
-					className="block max-w-full text-[18px] mb-[10px] bg-secondary-200/70"
+					className="block max-w-full text-[18px] mb-[10px] bg-gradient-to-tr from-secondary-200 to-primary-100"
 				>
 					Описание
 				</Chip>
@@ -156,28 +230,31 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 				<div>{movie.description}</div>
 			</div>
 
-			<div className={style.participants}>
+			<div className={cn(style.participants, 'mt-[20px]')}>
 				<Chip
 					variant="shadow"
-					className="block max-w-full mb-[10px] text-[18px] bg-secondary-200/70"
+					className="block max-w-full mb-[10px] text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
 				>
 					Авторы
 				</Chip>
 
 				<div className={style.participantsgrid}>
-					{statuses.map(() => (
+					{workers.map((item) => (
 						<div className={style.participant}>
 							<Image
 								className={cn(style.pass, 'object-cover w-[60px] h-[90px]')}
-								src="https://app.requestly.io/delay/5/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+								src={item.photo}
 							/>
 
 							<div>
-								Райан Госуслуги
+								{item.name}
 								<div className="font-bold">
 									Роль:
-									<Chip size="sm" className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md">
-										Режиссер
+									<Chip
+										size="sm"
+										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
+									>
+										{item.role}
 									</Chip>
 								</div>
 							</div>
@@ -189,7 +266,7 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 			<div className={style.participants}>
 				<Chip
 					variant="shadow"
-					className="block max-w-full mb-[10px] text-[18px] bg-secondary-200/70"
+					className="block max-w-full mb-[10px] text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100"
 				>
 					Персонажи
 				</Chip>
@@ -206,7 +283,10 @@ export const Movie = ({ movie, ...props }: MovieProps) => {
 								Райан Госуслуги
 								<div className="font-bold">
 									Актер:
-									<Chip size="sm" className="bg-secondary-100 ml-[5px] mt-[3px] shadow-md">
+									<Chip
+										size="sm"
+										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
+									>
 										Режиссер
 									</Chip>
 								</div>

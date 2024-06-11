@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ::-webkit-scrollbar {
+    display: none;
+} */
+
 * {
     box-sizing: border-box;
     margin: 0;

@@ -9,3 +9,9 @@
     display: grid;
     gap: 5px;
 }
+
+.bread {
+    display: grid;
+    grid-template-columns: 300px 300px;
+    gap: 10px;
+}

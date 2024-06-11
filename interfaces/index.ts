@@ -9,5 +9,5 @@ export * from './type.interface';
 export * from './country.interface';
 export * from './countries.interface';
 export * from './profession.interface';
-export * from './participant.interface';
+export * from './person.interface';
 export * from './sex.interface';

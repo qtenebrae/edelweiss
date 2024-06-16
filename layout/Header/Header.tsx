@@ -22,7 +22,7 @@ import cn from 'classnames';
 import { movies } from './data';
 
 export const Header = ({ ...props }: HeaderProps) => {
-	const { isAuth, handleLogOut, handleFetchProtected } = useContext(AuthContext);
+	const { isAuth, handleLogOut } = useContext(AuthContext);
 
 	const { isOpen: isOpenSignIn, onOpen: onOpenSignIn, onClose: onCloseSignIn } = useDisclosure();
 
@@ -36,7 +36,7 @@ export const Header = ({ ...props }: HeaderProps) => {
 				`fixed z-50 w-[100vw] h-[70px] bg-background/40 backdrop-blur-[32px] hover:bg-background hover:shadow-lg`,
 			)}
 		>
-			<Link href="/movies/3">
+			<Link href="/">
 				<EdelweissIcon />
 			</Link>
 
@@ -52,10 +52,10 @@ export const Header = ({ ...props }: HeaderProps) => {
 				</DropdownTrigger>
 				<DropdownMenu variant="faded" aria-label="dropdown menu">
 					<DropdownSection title="Навигация" showDivider>
-						<DropdownItem key="movies" description="Энциклопедия кинопроизведений">
-							Кинопроизведения
+						<DropdownItem key="movies" description="Энциклопедия фильмов" href="/movies">
+							Фильмы
 						</DropdownItem>
-						<DropdownItem key="books" description="Энциклопедия книг">
+						<DropdownItem key="books" description="Энциклопедия книг" isDisabled>
 							Книги
 						</DropdownItem>
 					</DropdownSection>
@@ -145,16 +145,16 @@ export const Header = ({ ...props }: HeaderProps) => {
 								src: 'https://avatars.githubusercontent.com/u/96431033?s=96&v=4',
 							}}
 							className="transition-transform"
-							description="@qtenebrae"
-							name="Ivanov Sergey"
+							description={`@${isAuth.login}`}
+							name={`${isAuth.profile.lastname} ${isAuth.profile.firstname}`}
 						/>
 					</DropdownTrigger>
 					<DropdownMenu variant="faded" aria-label="dropdown menu">
 						<DropdownSection title="Аккаунт" showDivider>
-							<DropdownItem key="movie" description="Избранные кинопроизведения">
-								Список кинопроизведений
+							<DropdownItem key="movie" description="Избранные фильмы" href={`/user/${isAuth.id}`}>
+								Список фильмов
 							</DropdownItem>
-							<DropdownItem key="book" description="Избранные книги">
+							<DropdownItem key="book" description="Избранные книги" isDisabled>
 								Список книг
 							</DropdownItem>
 							<DropdownItem key="settings" description="Настройки аккаунта">

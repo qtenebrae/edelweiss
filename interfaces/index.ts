@@ -11,3 +11,6 @@ export * from './countries.interface';
 export * from './profession.interface';
 export * from './person.interface';
 export * from './sex.interface';
+export * from './participant.interface';
+export * from './category.interface';
+export * from './history.interface';

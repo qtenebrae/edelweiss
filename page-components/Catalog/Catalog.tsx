@@ -1,6 +1,5 @@
 import style from './Catalog.module.css';
 import cn from 'classnames';
-import { movies, statuses, movie } from './constants';
 import {
 	Card,
 	CardBody,
@@ -16,8 +15,34 @@ import {
 	Select,
 	SelectItem,
 } from '@nextui-org/react';
+import { ICategory, IMovie } from '@/interfaces';
+import { useContext, useEffect, useState } from 'react';
+import { GATEWAY_HOST } from '@/constants';
+import { AuthContext } from '@/context/auth.context';
+import axios from 'axios';
 
 export const Catalog = () => {
+	const { isAuth } = useContext(AuthContext);
+
+	const [movies, setMovies] = useState<IMovie[]>([]);
+	const [categories, setCategories] = useState<ICategory[]>([]);
+
+	useEffect(() => {
+		const fetchData = async () => {
+			try {
+				const [movies, categories] = await Promise.all([
+					axios.get(`http://${GATEWAY_HOST}/catalog/movie/findAll`),
+					axios.get(`http://${GATEWAY_HOST}/feedback/category/findAll`),
+				]);
+				setMovies(movies.data);
+				setCategories(categories.data);
+			} catch {
+				//
+			}
+		};
+		fetchData();
+	}, [isAuth]);
+
 	return (
 		<div className={style.wrapper}>
 			<h2 className={cn(style.title, 'text-[28px]')}>Фильмы</h2>
@@ -83,13 +108,19 @@ export const Catalog = () => {
 						<PopoverTrigger>
 							<Card className="w-[160px] h-[325px] bg-background/40 hover:bg-gradient-to-tr from-secondary-200 to-primary-100 hover:shadow-lg">
 								<CardBody className="overflow-visible p-[5px]">
-									<Image isZoomed className="object-cover z-0 w-full h-[260px]" src={item.src} />
+									<Image
+										isZoomed
+										className="object-cover z-0 w-full h-[260px]"
+										src={`http://${GATEWAY_HOST}/uploads/${item.posterUrl}`}
+									/>
 								</CardBody>
 								<CardFooter className="block pb-[10px] pt-0">
 									<div className="font-bold text-default-900 text-[18px] truncate">
-										{item.title_rus}
+										{item.title}
 									</div>
-									<div className="text-default-500 text-[14px] truncate">{item.title_eng}</div>
+									<div className="text-default-500 text-[14px] truncate">
+										{item.alternativeTitle}
+									</div>
 								</CardFooter>
 							</Card>
 						</PopoverTrigger>
@@ -101,41 +132,46 @@ export const Catalog = () => {
 						>
 							<Link
 								className="font-bold text-default-900 text-[16px] transition hover:text-secondary"
-								href="/"
+								href={`/movies/${item.id}`}
 							>
-								{movie.title}
+								{item.title}
 							</Link>
-
-							<div>{movie.plot}</div>
-
+							<div>{`${item.description.slice(0, 200)}...`}</div>
 							<div className="font-bold">
 								Жанры:
-								{movie.genres.map((genre) => (
-									<Chip
-										key={genre}
-										size="sm"
-										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
-									>
-										{genre}
-									</Chip>
-								))}
+								{item.genres &&
+									item.genres.map((g) => (
+										<Chip
+											key={g.genre.id}
+											size="sm"
+											className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
+										>
+											{g.genre.title}
+										</Chip>
+									))}
 							</div>
-
 							<div className="font-bold">
 								Режиссер:
-								<Chip
-									size="sm"
-									className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
-								>
-									{movie.director}
-								</Chip>
+								{(() => {
+									const director = item.participants.find(
+										(participant) => participant.profession.title === 'Режиссер',
+									);
+									return director ? (
+										<Chip
+											size="sm"
+											className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md"
+										>
+											{director.person.lastname} {director.person.firstname}
+										</Chip>
+									) : (
+										<span>Не найден</span>
+									);
+								})()}
 							</div>
-
 							<div className="font-bold">
 								Возрастное ограничение:
-								<span className="font-normal ml-[5px] text-default-500">{`${movie.agelimit}+`}</span>
+								<span className="font-normal ml-[5px] text-default-500">{`${item.ageLimit}+`}</span>
 							</div>
-
 							<Select
 								radius="md"
 								color="secondary"
@@ -147,15 +183,15 @@ export const Catalog = () => {
 										'h-[32px] min-h-0 shadow-lg bg-gradient-to-tr from-secondary-200 to-primary-100',
 								}}
 							>
-								{statuses.map((item) => (
-									<SelectItem key={item.status}>{item.title}</SelectItem>
+								{categories.map((item) => (
+									<SelectItem key={item.id}>{item.title}</SelectItem>
 								))}
 							</Select>
 
 							<div className="font-bold">
 								Рейтинг:
 								<Chip size="lg" className="bg-success-300 ml-[5px] mt-[3px] shadow-md">
-									{movie.rating}
+									{item.rating}
 								</Chip>
 							</div>
 						</PopoverContent>

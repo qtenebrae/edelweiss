@@ -1,5 +1,5 @@
-import { TrendingMoviesProps } from './TrendingMovies.props';
-import styles from './TrendingMovies.module.css';
+import { MainProps } from './Main.props';
+import styles from './Main.module.css';
 import {
 	Chip,
 	Card,
@@ -16,7 +16,7 @@ import {
 import { movies, movie, statuses, movies1, genres, genres2 } from './constants';
 import cn from 'classnames';
 
-export const TrendingMovies = ({ ...props }: TrendingMoviesProps): JSX.Element => {
+export const Main = ({ ...props }: MainProps): JSX.Element => {
 	return (
 		<div {...props}>
 			<Chip className="flex max-w-full px-[24px] mb-[10px] text-[20px] bg-gradient-to-tr from-secondary-200 to-primary-100 shadow-lg">

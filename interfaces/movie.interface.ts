@@ -1,5 +1,6 @@
 import { ICountries } from './countries.interface';
 import { IGenres } from './genres.interface';
+import { IParticipant } from './participant.interface';
 import { IReview } from './review.interface';
 import { IStatus } from './status.interface';
 import { IType } from './type.interface';
@@ -22,4 +23,5 @@ export interface IMovie {
 	genres: IGenres[];
 	countries: ICountries[];
 	reviews: IReview[];
+	participants: IParticipant[];
 }

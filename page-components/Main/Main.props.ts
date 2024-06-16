@@ -1,4 +1,4 @@
 import { DetailedHTMLProps, HTMLAttributes } from 'react';
 
-export interface TrendingMoviesProps
+export interface MainProps
 	extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {}

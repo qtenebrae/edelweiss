@@ -1,15 +1,15 @@
 import { withLayout } from '@/layout/Layout';
-import { MovieNew } from '@/page-components';
+import { User } from '@/page-components';
 import { Card, CardBody } from '@nextui-org/react';
 
-function MoviePage() {
+function Profile() {
 	return (
 		<Card className="mx-auto px-[10px] pb-[10px] mt-[40px] mb-[30px] w-[1200px] bg-background/30 backdrop-blur-[3px]">
 			<CardBody>
-				<MovieNew></MovieNew>
+				<User></User>
 			</CardBody>
 		</Card>
 	);
 }
 
-export default withLayout(MoviePage);
+export default withLayout(Profile);

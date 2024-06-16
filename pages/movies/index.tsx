@@ -4,7 +4,7 @@ import { Card, CardBody } from '@nextui-org/react';
 
 function Movies() {
 	return (
-		<Card className="mx-auto px-[10px] pb-[10px] mt-[40px] w-[1200px] bg-background/30 backdrop-blur-[3px]">
+		<Card className="mx-auto px-[10px] pb-[10px] mt-[40px] mb-[30px] w-[1200px] bg-background/30 backdrop-blur-[3px]">
 			<CardBody>
 				<Catalog></Catalog>
 			</CardBody>

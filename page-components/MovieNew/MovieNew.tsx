@@ -25,11 +25,24 @@ import style from './MovieNew.module.css';
 import cn from 'classnames';
 import axios from 'axios';
 
+interface Participant {
+	character?: string;
+	professionId: number;
+	movieId: number;
+	personId: number;
+	person: IPerson;
+}
+
 export const MovieNew = ({ ...props }: MovieNewProps) => {
+	// Genres, countries of production and cinema workers that will be added along with the new film
 	const [genresAdded, setGenresAdded] = useState<IGenre[]>([]);
 	const [countriesAdded, setCountriesAdded] = useState<ICountry[]>([]);
-	const [participantsAdded, setParticipantsAdded] = useState<>([]);
+	const [participantsAdded, setParticipantsAdded] = useState<Participant[]>([]);
 
+	// A profession that will be added for the next film worker
+	const [selectProfession, setSelectProfession] = useState<string>();
+
+	// The data that will be uploaded to the page
 	const [types, setTypes] = useState<IType[]>([]);
 	const [statuses, setStatuses] = useState<IStatus[]>([]);
 	const [genres, setGenres] = useState<IGenre[]>([]);
@@ -37,9 +50,11 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 	const [professions, setProfessions] = useState<IProfession[]>([]);
 	const [persons, setPersons] = useState<IPerson[]>([]);
 
+	// Preview for the movie poster and the poster itself
 	const [poster, setPoster] = useState<File | null>(null);
 	const [posterPreview, setPosterPreview] = useState<string | null>(null);
 
+	// Fetching data from the server
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
@@ -64,6 +79,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		fetchData();
 	}, []);
 
+	// The data that will be saved in the new movie
 	const [title, setTitle] = useState<string>();
 	const [alternativeTitle, setAlternativeTile] = useState<string>();
 	const [typeId, setTypeId] = useState<string>();
@@ -74,6 +90,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 	const [ageLimit, setAgeLimit] = useState<string>();
 	const [description, setDescription] = useState<string>();
 
+	// Handlers for select components
 	const handleSelectionStatus = (e: ChangeEvent<HTMLSelectElement>) => {
 		setStatusId(e.target.value);
 	};
@@ -82,12 +99,18 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		setTypeId(e.target.value);
 	};
 
+	const handleSelectionProfession = (p: ChangeEvent<HTMLSelectElement>) => {
+		setSelectProfession(p.target.value);
+	};
+
+	// Request to add a new movie to the server
 	const createMovie = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		event.stopPropagation();
 
 		let filename = '';
 
+		// Saving the poster to the server
 		if (poster) {
 			const formData = new FormData();
 			formData.append('poster', poster);
@@ -109,6 +132,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 			}
 		}
 
+		// Adding a movie
 		try {
 			const response = await axios.post(`http://${GATEWAY_HOST}/catalog/movie/create`, {
 				title,
@@ -124,6 +148,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 				posterUrl: filename,
 				genresId: genresAdded.map((item) => item.id),
 				countriesId: countriesAdded.map((item) => item.id),
+				participants: participantsAdded,
 			});
 
 			console.log(response.data);
@@ -134,6 +159,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		}
 	};
 
+	// Handlers for adding genres, countries of production and film workers
 	const handleAddGenre = (genre: IGenre) => {
 		if (!genresAdded.some((g) => g.id === genre.id)) {
 			setGenresAdded((prevGenres) => [...prevGenres, genre]);
@@ -146,6 +172,17 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		}
 	};
 
+	const handleAddWorkers = (person: IPerson) => {
+		const newParticipant: Participant = {
+			professionId: Number(selectProfession),
+			movieId: 1,
+			personId: person.id,
+			person: person,
+		};
+		setParticipantsAdded((prevParticipants) => [...prevParticipants, newParticipant]);
+	};
+
+	// Handlers for removing genres, countries of production and film workers
 	const handleRemoveGenre = (genre: IGenre) => {
 		setGenresAdded((prevGenres) => prevGenres.filter((g) => g.id !== genre.id));
 	};
@@ -154,6 +191,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 		setCountriesAdded((prevCountries) => prevCountries.filter((c) => c.id !== country.id));
 	};
 
+	// Replacing the poster preview
 	const handlePosterChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0];
 		if (file) {
@@ -164,6 +202,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 
 	return (
 		<form className={style.wrapper} method="POST" onSubmit={createMovie} {...props}>
+			{/* The title and alternative titles of the film */}
 			<div className={style.title}>
 				<Input
 					type="text"
@@ -181,12 +220,12 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					isRequired
 				></Input>
 			</div>
-
+			{/* Breadcrumbs */}
 			<Breadcrumbs className={style.breadcrumbs}>
 				<BreadcrumbItem href="/">Главная</BreadcrumbItem>
 				<BreadcrumbItem href="">Фильмы</BreadcrumbItem>
 			</Breadcrumbs>
-
+			{/* The poster */}
 			<div className={style.poster}>
 				<label htmlFor="poster">
 					<Image
@@ -210,7 +249,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					className="hidden"
 				/>
 			</div>
-
+			{/* A block with information */}
 			<div className={cn(style.information, 'text-[14px]')}>
 				<Chip
 					variant="shadow"
@@ -353,7 +392,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					isRequired
 				></Input>
 			</div>
-
+			{/* Actions */}
 			<div className={style.actions}>
 				<Chip
 					variant="shadow"
@@ -431,7 +470,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					Добавить фильм
 				</Button>
 			</div>
-
+			{/* Actions with cinema workers */}
 			<div className={style.participantActions}>
 				<Chip
 					variant="shadow"
@@ -470,7 +509,7 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					</PopoverContent>
 				</Popover>
 			</div>
-
+			{/* Description */}
 			<div className={style.description}>
 				<Chip
 					variant="shadow"
@@ -487,37 +526,92 @@ export const MovieNew = ({ ...props }: MovieNewProps) => {
 					isRequired
 				/>
 			</div>
-
+			{/* Cinema workers */}
 			<div className={style.participants}>
 				<Chip
 					variant="shadow"
 					className="block max-w-full mb-[10px] text-[18px] bg-gradient-to-tr from-secondary-200 to-primary-100 text-default-900"
 				>
-					Авторы
+					Работники кино
 				</Chip>
 
 				<div className={style.participantsgrid}>
-					{statuses.map(() => (
+					{participantsAdded.map((item) => (
 						<div className={style.participant}>
 							<Image
 								className={cn(style.pass, 'object-cover w-[60px] h-[90px]')}
-								src="https://app.requestly.io/delay/5/https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+								src={
+									item.person.photoUrl
+										? `http://${GATEWAY_HOST}/uploads/${item.person.photoUrl}`
+										: `http://${GATEWAY_HOST}/uploads/404.jpg`
+								}
 							/>
 
 							<div>
-								Райан Госуслуги
+								{`${item.person.lastname} ${item.person.firstname}`}
 								<div className="font-bold">
 									Роль:
 									<Chip
 										size="sm"
 										className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:bg-secondary-200 hover:text-secondary transition"
 									>
-										Режиссер
+										{professions.find((profession) => profession.id === item.professionId)?.title}
 									</Chip>
 								</div>
 							</div>
 						</div>
 					))}
+
+					<div>
+						<Popover placement="right">
+							<PopoverTrigger>
+								<Chip
+									size="sm"
+									className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
+								>
+									Добавить
+								</Chip>
+							</PopoverTrigger>
+							<PopoverContent className="p-[20px] gap-[10px] w-[360px] h-[200px]">
+								<div>
+									{persons.map((person) => (
+										<div className="flex" key={person.id}>
+											<Image
+												className={cn(style.pass, 'object-cover w-[60px] h-[90px]')}
+												src={
+													person.photoUrl
+														? `http://${GATEWAY_HOST}/uploads/${person.photoUrl}`
+														: `http://${GATEWAY_HOST}/uploads/404.jpg`
+												}
+											/>
+											<Chip
+												size="sm"
+												className="bg-gradient-to-tr from-secondary-200 to-primary-100 ml-[5px] mt-[3px] shadow-md cursor-pointer hover:text-secondary transition"
+												onClick={() => handleAddWorkers(person)}
+											>
+												{`${person.lastname} ${person.firstname} ${person.middlename}`}
+											</Chip>
+										</div>
+									))}
+								</div>
+							</PopoverContent>
+						</Popover>
+
+						<Select
+							label="Статус"
+							selectedKeys={selectProfession}
+							onChange={handleSelectionProfession}
+							className="mt-[10px] ml-[5px]"
+							classNames={{
+								trigger:
+									'bg-gradient-to-tr from-secondary-200 to-primary-100 w-[140px] h-[40px] min-h-0',
+							}}
+						>
+							{professions.map((item) => (
+								<SelectItem key={item.id}>{item.title}</SelectItem>
+							))}
+						</Select>
+					</div>
 				</div>
 			</div>
 		</form>

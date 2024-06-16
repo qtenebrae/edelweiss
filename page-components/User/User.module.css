@@ -1,0 +1,24 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: [start] 200px [namestart] auto [nameend] 0.35fr [end];
+    gap: 10px 20px;
+}
+
+.user {
+    grid-column: start / namestart;
+    grid-row: 1 / 3;
+}
+
+.name {
+    grid-column: namestart / end;
+}
+
+.list {
+    grid-column: start / nameend;
+}
+
+.categoryitem {
+    display: grid;
+    grid-template-columns: 1fr repeat(3, 100px);
+    gap: 10px;
+}

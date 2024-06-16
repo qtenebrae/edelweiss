@@ -108,6 +108,8 @@ export const Person = ({ persons, setPersons }: PersonProps) => {
 			Object.assign(data, { dateOfDeath: dateOfDeath.toDate(getLocalTimeZone()) });
 		}
 
+		console.log(data);
+
 		try {
 			await axios.post(`http://${GATEWAY_HOST}/catalog/person/create`, data);
 			const response = await axios.get(`http://${GATEWAY_HOST}/catalog/person/findAll`);
@@ -167,7 +169,7 @@ export const Person = ({ persons, setPersons }: PersonProps) => {
 					<Image
 						className="object-cover w-[60px] h-[90px]"
 						src={
-							person.photoUrl.length == 0
+							person.photoUrl
 								? `http://${GATEWAY_HOST}/uploads/${person.photoUrl}`
 								: `http://${GATEWAY_HOST}/uploads/404.jpg`
 						}
